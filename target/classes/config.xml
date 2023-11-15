@@ -1,0 +1,106 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Constructor injection -->
+	<bean id="student" class="Spring_Core.SpringCoreProject.withoutAnnotation.Student">
+		<constructor-arg name="name" value="Tina" />
+		<constructor-arg name="age" value="21" />
+	</bean>
+
+	<!-- Type Matching -->
+	<bean id="person" class="Spring_Core.SpringCoreProject.withoutAnnotation.Person">
+		<constructor-arg type="java.lang.String" value="Tina" />
+		<constructor-arg type="java.lang.String" value="Delhi" />
+	</bean>
+
+	<!--Argument Index -->
+	<bean id="salary" class="Spring_Core.SpringCoreProject.withoutAnnotation.Salary">
+		<constructor-arg index="0" value="7500000" />
+		<constructor-arg>
+			<ref bean="person" /><!-- reference bean -->
+		</constructor-arg>
+	</bean>
+
+	<!-- Setter Injection -->
+	<bean class="Spring_Core.SpringCoreProject.withoutAnnotation.Car" name="car" id="car">
+		<property name="name">
+			<value>Swift</value>
+		</property>
+
+		<property name="engine">
+			<value>V8</value>
+		</property>
+	</bean>
+
+	<!-- Setter Injection -->
+	<bean class="Spring_Core.SpringCoreProject.withoutAnnotation.Milage" name="miles" id="miles">
+		<property name="car" ref="car"></property>
+
+		<property name="milage">
+			<value>30</value>
+		</property>
+	</bean>
+
+	<!-- Collections -->
+	<bean id="collections" class="Spring_Core.SpringCoreProject.withoutAnnotation.CollectionDI">
+		<property name="person"><!-- list -->
+			<list>
+				<ref bean="person" />
+				<ref bean="person" />
+			</list>
+		</property>
+
+		<property name="dbProperties"><!-- Map -->
+			<map>
+				<entry>
+					<key>
+						<value>Driver</value>
+					</key>
+					<value>jdbc.driver.className=com.mysql.jdbc.Driver</value>
+				</entry>
+				<entry>
+					<key>
+						<value>url</value>
+					</key>
+					<value>jdbc.url=jdbc:mysql://localhost:3306/mydb</value>
+				</entry>
+				<entry>
+					<key>
+						<value>username</value>
+					</key>
+					<value>root</value>
+				</entry>
+				<entry>
+					<key>
+						<value>password</value>
+					</key>
+					<value>root</value>
+				</entry>
+			</map>
+		</property>
+
+		<property name="car"><!-- Set -->
+			<set>				
+				<ref bean="car" />
+				<ref bean="car" />
+			</set>
+		</property>		
+	</bean>
+
+	<!-- Autowire -->
+	<bean id="dep" class="Spring_Core.SpringCoreProject.withoutAnnotation.Department">
+		<constructor-arg name="name" value="CS" />		
+	</bean>
+	
+	<!-- If it is found then the constructor mode is chosen.-->
+	<!-- If there is no constructor defined in a bean, the autowire byType mode is chosen. -->
+	<!-- <bean id="emp" class="Spring_Core.SpringCoreProject.Employee" autowire="autodetect"></bean> -->
+	
+	<bean id="emp" class="Spring_Core.SpringCoreProject.withoutAnnotation.Employee" autowire="byType" init-method="init"/>
+	
+	<!-- inheritance -->
+	<bean id="office" class="Spring_Core.SpringCoreProject.withoutAnnotation.Office" parent="emp"/>
+</beans>
