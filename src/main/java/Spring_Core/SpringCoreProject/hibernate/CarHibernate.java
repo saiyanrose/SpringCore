@@ -30,6 +30,7 @@ public class CarHibernate {
 		this.transaction = null;
 	}	
 
+	@SuppressWarnings("deprecation")
 	public void beginTransaction() {
 		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
 		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
@@ -39,10 +40,14 @@ public class CarHibernate {
 		this.statistic=this.factory.getStatistics();		
 		this.factory.getStatistics().setStatisticsEnabled(true);
 		
+		// Enable second-level cache for the entity 
+		this.factory.getCache().evictEntityRegion(Car.class); 
+		
 		this.session = this.factory.openSession();
 		this.transaction = this.session.beginTransaction();
 	}	
 	
+	@SuppressWarnings("deprecation")
 	public void saveCar(Car car) {
 		try {
 			beginTransaction();	
@@ -51,6 +56,7 @@ public class CarHibernate {
 			//The generation of INSERT statements will occur only upon committing the transaction, or flushing or closing the session.
 			
 			this.session.save(car);//persistent state
+			this.factory.getCache().evictEntity(Car.class, car.getId());// Evict the cache for the entity  
 			this.transaction.commit();			
 			System.out.println("car saved successfully");
 		}catch (Exception e) {
@@ -67,7 +73,8 @@ public class CarHibernate {
 	public List<Car> allCars(){	
 		try {
 			beginTransaction();			
-			Query<Car> query=session.createQuery("from Car");			
+			Query<Car> query=session.createQuery("from Car");
+			query.setCacheable(true);//first level cache
 			return query.list();
 		}catch (Exception e) {
 			System.out.println(e.getMessage());			
@@ -76,7 +83,7 @@ public class CarHibernate {
 	}
 	
 
-	@SuppressWarnings({ "unchecked"})
+	@SuppressWarnings({ "unchecked", "deprecation"})
 	public int updateCar(String name,Integer id) {
 		int status=0;  
 		try {			
@@ -85,6 +92,8 @@ public class CarHibernate {
 			query.setParameter("name",name);  
 			query.setParameter("id",id);
 			status=query.executeUpdate();//update and delete
+			// Evict the cache for the entity 
+			this.factory.getCache().evictEntity(Car.class,id);
 			transaction.commit();			
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -101,7 +110,8 @@ public class CarHibernate {
 	public List<Car>allCar(){		
 		try {
 			beginTransaction();			
-			Criteria criteria=session.createCriteria(Car.class);			
+			Criteria criteria=session.createCriteria(Car.class);	
+			criteria.setCacheable(true);
 			return criteria.list();			
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
