@@ -7,8 +7,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import Spring_Core.SpringCoreProject.JdbcTemplate.Car;
 
-
-
 public class HibernatePrac {
 
 	public static void main(String[] args) {		

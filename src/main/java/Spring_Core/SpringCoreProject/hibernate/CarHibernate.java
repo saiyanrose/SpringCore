@@ -15,8 +15,6 @@ import org.hibernate.stat.Statistics;
 
 import Spring_Core.SpringCoreProject.JdbcTemplate.Car;
 
-
-
 public class CarHibernate {
 	private SessionFactory factory;
 	private Session session;
@@ -40,7 +38,7 @@ public class CarHibernate {
 		this.statistic=this.factory.getStatistics();		
 		this.factory.getStatistics().setStatisticsEnabled(true);
 		
-		// Enable second-level cache for the entity 
+		//Enable second-level cache for the entity 
 		this.factory.getCache().evictEntityRegion(Car.class); 
 		
 		this.session = this.factory.openSession();
@@ -53,10 +51,13 @@ public class CarHibernate {
 			beginTransaction();	
 			
 			//this.session.persist(car);// transitioned from a transient to persistent state.
-			//The generation of INSERT statements will occur only upon committing the transaction, or flushing or closing the session.
+			//The generation of INSERT statements will occur only upon committing the transaction,
+			//or flushing or closing the session.
 			
 			this.session.save(car);//persistent state
+			
 			this.factory.getCache().evictEntity(Car.class, car.getId());// Evict the cache for the entity  
+			
 			this.transaction.commit();			
 			System.out.println("car saved successfully");
 		}catch (Exception e) {
@@ -74,7 +75,9 @@ public class CarHibernate {
 		try {
 			beginTransaction();			
 			Query<Car> query=session.createQuery("from Car");
+			
 			query.setCacheable(true);//first level cache
+			
 			return query.list();
 		}catch (Exception e) {
 			System.out.println(e.getMessage());			
@@ -92,8 +95,10 @@ public class CarHibernate {
 			query.setParameter("name",name);  
 			query.setParameter("id",id);
 			status=query.executeUpdate();//update and delete
+			
 			// Evict the cache for the entity 
 			this.factory.getCache().evictEntity(Car.class,id);
+			
 			transaction.commit();			
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -110,8 +115,10 @@ public class CarHibernate {
 	public List<Car>allCar(){		
 		try {
 			beginTransaction();			
-			Criteria criteria=session.createCriteria(Car.class);	
+			Criteria criteria=session.createCriteria(Car.class);
+			
 			criteria.setCacheable(true);
+			
 			return criteria.list();			
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -147,8 +154,7 @@ public class CarHibernate {
 		try {
 			beginTransaction();	
 			Car car= this.session.load(Car.class,1);
-			transaction.commit();
-			getStatistics();
+			transaction.commit();			
 			return car;
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -159,16 +165,5 @@ public class CarHibernate {
 		return null;
 	}
 
-	//Hibernate lifecycle
-	//Once we create an instance of POJO class, then the object entered in the transient state.
-	//Here,an object is not associated with the Session.
 	
-	//As soon as the object associated with the Session, it entered in the persistent state.
-	//we can say that an object is in the persistence state when we save or persist it.
-	//each object represents the row of the database table.
-	
-	//Once we either close the session or clear its cache, then the object entered into the detached state.
-
-	//session.persist()
-	//If the object properties are changed before the transaction is committed or session is flushed, it will also be saved into database.
 }
