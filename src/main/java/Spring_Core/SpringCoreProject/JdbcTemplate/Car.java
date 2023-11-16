@@ -8,13 +8,13 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-//@Entity
-//@Table(name="car")
-//@Cacheable
-//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Entity
+@Table(name="car")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Car {
 	
-	//@Id		
+	@Id		
 	private Integer id;
 	
 	private String brands;
