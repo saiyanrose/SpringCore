@@ -103,4 +103,34 @@
 	
 	<!-- inheritance -->
 	<bean id="office" class="Spring_Core.SpringCoreProject.withoutAnnotation.Office" parent="emp"/>
+	
+	<bean id="carJdbc" class="Spring_Core.SpringCoreProject.JdbcTemplate.Car">
+    	<constructor-arg index="0" value="1" ></constructor-arg>
+    	<constructor-arg index="1" value="Tata" ></constructor-arg>
+    	<constructor-arg index="2" value="Safari" ></constructor-arg>   
+    </bean>
+    
+    <bean id="carJdbc1" class="Spring_Core.SpringCoreProject.JdbcTemplate.Car">
+    	<constructor-arg index="0" value="2" ></constructor-arg>
+    	<constructor-arg index="1" value="Tata" ></constructor-arg>
+    	<constructor-arg index="2" value="Sumo" ></constructor-arg>   
+    </bean>
+    
+    <!-- -Jdbc template -->
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/test" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+	
+	<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+	
+	<bean id="carRepo" class="Spring_Core.SpringCoreProject.JdbcTemplate.CarRepositoryImpl">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate"></property>
+	</bean>	
 </beans>

@@ -2,9 +2,6 @@ package Spring_Core.SpringCoreProject.annotation;
 
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Required;
-
-@SuppressWarnings("deprecation")
 public class Movie {
 
 	private String name;
@@ -19,7 +16,7 @@ public class Movie {
 	}
 
 	//bean property must be populated at configuration time	
-	@Required
+	//@Required
 	public void setName(String name) {
 		this.name = name;
 	}
