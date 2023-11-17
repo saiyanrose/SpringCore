@@ -32,10 +32,7 @@ public class HibernatePrac {
 		List<Car>cars1=carHibernate.allCar();
 		System.out.println("total cars: "+cars1.size());		
 		
-		//get()
-		//method is used to retrieve a persistent object from the database.
-		//method only hits the database if the object is not present in the session cache.
-		//method returns null if there is no object present in the database.			
+		//get,load			
 		car=carHibernate.getCarById();		
 		System.out.println("get:"+car);		
 		

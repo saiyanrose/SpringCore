@@ -11,7 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name="car")
 @Cacheable
-@Cache(usage =CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage =CacheConcurrencyStrategy.READ_WRITE)//2nd level cache
 public class Car {
 	
 	@Id		
